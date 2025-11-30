@@ -5,7 +5,7 @@ import { useAuth } from '../src/hooks/useAuth';
 describe('useAuth Hook', () => {
   beforeEach(() => {
     localStorage.clear();
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   describe('initialization', () => {
@@ -17,7 +17,7 @@ describe('useAuth Hook', () => {
 
     it('should start with no user', async () => {
       vi.mocked(localStorage.getItem).mockReturnValue(null);
-      
+
       const { result } = renderHook(() => useAuth());
 
       await waitFor(() => {

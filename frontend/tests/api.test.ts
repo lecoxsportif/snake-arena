@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { authApi, gameApi, liveApi } from '../src/services/api';
 
-describe('Auth API', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    vi.clearAllMocks();
-  });
+beforeEach(async () => {
+  localStorage.clear();
+  vi.clearAllMocks();
+  await authApi.logout();
+});
 
+describe('Auth API', () => {
   describe('login', () => {
     it('should successfully login with valid credentials', async () => {
       const result = await authApi.login({
@@ -148,7 +149,7 @@ describe('Game API', () => {
   describe('submitScore', () => {
     it('should fail when not logged in', async () => {
       localStorage.clear();
-      
+
       const result = await gameApi.submitScore(100, 'walls');
 
       expect(result.success).toBe(false);
@@ -185,7 +186,7 @@ describe('Live API', () => {
   describe('getPlayerStream', () => {
     it('should return player data for valid ID', async () => {
       const playersResult = await liveApi.getActivePlayers();
-      
+
       if (playersResult.data && playersResult.data.length > 0) {
         const playerId = playersResult.data[0].id;
         const result = await liveApi.getPlayerStream(playerId);
