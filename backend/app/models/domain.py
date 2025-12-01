@@ -43,6 +43,7 @@ class User(BaseModel):
     id: str
     username: str
     email: EmailStr
+    password: str  # In production, this should be hashed
     highScore: int
     gamesPlayed: int
     createdAt: datetime

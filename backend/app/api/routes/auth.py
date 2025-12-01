@@ -1,7 +1,7 @@
 """Authentication routes."""
 
 from fastapi import APIRouter
-from app.models.schemas import AuthCredentials, ApiResponse
+from app.models.schemas import AuthCredentials, ApiResponse, UserResponse
 from app.services import database as db
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -18,13 +18,21 @@ async def login(credentials: AuthCredentials) -> ApiResponse:
             data=None
         )
     
-    # In a real app, we'd verify the password here
+    # Validate password (in production, use proper password hashing)
+    if user.password != credentials.password:
+        return ApiResponse(
+            success=False,
+            error="Invalid email or password",
+            data=None
+        )
+    
+    # Set current user session
     db.current_user = user
     
     return ApiResponse(
         success=True,
         error=None,
-        data=user.model_dump()
+        data=user.model_dump(exclude={'password'})
     )
 
 @router.post("/signup")
@@ -48,13 +56,13 @@ async def signup(credentials: AuthCredentials) -> ApiResponse:
     
     # Create new user
     username = credentials.username or f"Player{len(db.mock_users)}"
-    new_user = db.create_user(credentials.email, username)
+    new_user = db.create_user(credentials.email, username, credentials.password)
     db.current_user = new_user
     
     return ApiResponse(
         success=True,
         error=None,
-        data=new_user.model_dump()
+        data=new_user.model_dump(exclude={'password'})
     )
 
 @router.post("/logout")
@@ -81,5 +89,5 @@ async def get_current_user() -> ApiResponse:
     return ApiResponse(
         success=True,
         error=None,
-        data=db.current_user.model_dump()
+        data=db.current_user.model_dump(exclude={'password'})
     )

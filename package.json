@@ -1,0 +1,17 @@
+{
+    "name": "snake-arena",
+    "version": "1.0.0",
+    "description": "Snake Arena - Frontend and Backend",
+    "private": true,
+    "scripts": {
+        "dev": "concurrently \"npm:dev:frontend\" \"npm:dev:backend\"",
+        "dev:frontend": "cd frontend && npm run dev",
+        "dev:backend": "cd backend && make run",
+        "test": "concurrently \"npm:test:frontend\" \"npm:test:backend\"",
+        "test:frontend": "cd frontend && npm test",
+        "test:backend": "cd backend && make test"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.0"
+    }
+}

@@ -14,6 +14,7 @@ mock_users: list[User] = [
         id='1',
         username='PixelMaster',
         email='pixel@game.com',
+        password='password123',
         highScore=1250,
         gamesPlayed=45,
         createdAt=datetime(2024, 1, 15)
@@ -22,6 +23,7 @@ mock_users: list[User] = [
         id='2',
         username='NeonNinja',
         email='neon@game.com',
+        password='password123',
         highScore=980,
         gamesPlayed=32,
         createdAt=datetime(2024, 2, 20)
@@ -30,6 +32,7 @@ mock_users: list[User] = [
         id='3',
         username='RetroGamer',
         email='retro@game.com',
+        password='password123',
         highScore=850,
         gamesPlayed=28,
         createdAt=datetime(2024, 3, 10)
@@ -95,12 +98,13 @@ def get_user_by_username(username: str) -> Optional[User]:
     """Get user by username."""
     return next((u for u in mock_users if u.username == username), None)
 
-def create_user(email: str, username: str) -> User:
+def create_user(email: str, username: str, password: str) -> User:
     """Create a new user."""
     new_user = User(
         id=str(len(mock_users) + 1),
         username=username,
         email=email,
+        password=password,
         highScore=0,
         gamesPlayed=0,
         createdAt=datetime.now()

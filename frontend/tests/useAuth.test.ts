@@ -5,7 +5,7 @@ import { useAuth } from '../src/hooks/useAuth';
 describe('useAuth Hook', () => {
   beforeEach(() => {
     localStorage.clear();
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('initialization', () => {
@@ -16,7 +16,7 @@ describe('useAuth Hook', () => {
     });
 
     it('should start with no user', async () => {
-      vi.mocked(localStorage.getItem).mockReturnValue(null);
+      // localStorage is empty by default due to beforeEach
 
       const { result } = renderHook(() => useAuth());
 
@@ -37,7 +37,7 @@ describe('useAuth Hook', () => {
         gamesPlayed: 5,
         createdAt: '2024-01-01',
       };
-      vi.mocked(localStorage.getItem).mockReturnValue(JSON.stringify(mockUser));
+      localStorage.setItem('snake_user', JSON.stringify(mockUser));
 
       const { result } = renderHook(() => useAuth());
 
