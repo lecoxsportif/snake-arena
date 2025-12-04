@@ -2,7 +2,8 @@
 
 from enum import Enum
 from datetime import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic.alias_generators import to_camel
 
 class Direction(str, Enum):
     """Snake movement direction."""
@@ -40,13 +41,19 @@ class GameState(BaseModel):
 
 class User(BaseModel):
     """User model."""
+    model_config = ConfigDict(
+        from_attributes=True,
+        populate_by_name=True,
+        alias_generator=to_camel
+    )
+    
     id: str
     username: str
     email: EmailStr
     password: str  # In production, this should be hashed
-    highScore: int
-    gamesPlayed: int
-    createdAt: datetime
+    high_score: int
+    games_played: int
+    created_at: datetime
 
 class LeaderboardEntry(BaseModel):
     """Leaderboard entry."""

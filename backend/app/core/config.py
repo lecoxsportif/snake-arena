@@ -13,4 +13,7 @@ class Settings:
     # API settings
     API_PREFIX: str = "/api"
 
+    # Database settings
+    DATABASE_URL: str = "sqlite+aiosqlite:///./snake_arena.db"
+
 settings = Settings()
