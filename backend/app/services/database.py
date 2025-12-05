@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy import select, desc, func
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.utils.security import hash_password
 
 from app.models.domain import (
     User, LeaderboardEntry, ActivePlayer, GameState, 
@@ -66,11 +67,13 @@ async def create_user(db: AsyncSession, email: str, username: str, password: str
     import uuid
     user_id = str(uuid.uuid4())
     
+    # Hash the password before storing
+    hashed_pw = hash_password(password)
     db_user = DBUser(
         id=user_id,
         username=username,
         email=email,
-        password=password,
+        password=hashed_pw,
         high_score=0,
         games_played=0,
         created_at=datetime.now()

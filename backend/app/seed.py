@@ -5,6 +5,9 @@ from datetime import datetime
 from sqlalchemy import select
 from app.core.database import AsyncSessionLocal
 from app.models.sql import User, Score
+from app.utils.security import hash_password
+
+
 from app.models.domain import GameMode
 
 async def seed_data():
@@ -24,7 +27,7 @@ async def seed_data():
                 id='1',
                 username='PixelMaster',
                 email='pixel@game.com',
-                password='password123',
+                password=hash_password('password123'),
                 high_score=1250,
                 games_played=45,
                 created_at=datetime(2024, 1, 15)
@@ -33,7 +36,7 @@ async def seed_data():
                 id='2',
                 username='NeonNinja',
                 email='neon@game.com',
-                password='password123',
+                password=hash_password('password123'),
                 high_score=980,
                 games_played=32,
                 created_at=datetime(2024, 2, 20)
@@ -42,7 +45,7 @@ async def seed_data():
                 id='3',
                 username='RetroGamer',
                 email='retro@game.com',
-                password='password123',
+                password=hash_password('password123'),
                 high_score=850,
                 games_played=28,
                 created_at=datetime(2024, 3, 10)

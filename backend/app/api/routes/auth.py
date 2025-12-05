@@ -4,6 +4,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Response, Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.schemas import AuthCredentials, ApiResponse
+from app.utils.security import verify_password
 from app.services import database as db
 from app.core.database import get_db
 
@@ -26,7 +27,8 @@ async def login(
         )
     
     # Validate password (in production, use proper password hashing)
-    if user.password != credentials.password:
+    # Verify password using hashed value
+    if not verify_password(credentials.password, user.password):
         return ApiResponse(
             success=False,
             error="Invalid email or password",

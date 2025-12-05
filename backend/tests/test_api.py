@@ -2,6 +2,7 @@ import pytest
 from datetime import datetime
 from app.models.sql import User, Score
 from app.models.domain import GameMode
+from app.utils.security import hash_password
 
 @pytest.fixture(autouse=True)
 async def seed_db(db_session):
@@ -12,7 +13,7 @@ async def seed_db(db_session):
             id='1',
             username='PixelMaster',
             email='pixel@game.com',
-            password='password123',
+            password=hash_password('password123'),
             high_score=1250,
             games_played=45,
             created_at=datetime(2024, 1, 15)
@@ -21,7 +22,7 @@ async def seed_db(db_session):
             id='2',
             username='NeonNinja',
             email='neon@game.com',
-            password='password123',
+            password=hash_password('password123'),
             high_score=980,
             games_played=32,
             created_at=datetime(2024, 2, 20)
