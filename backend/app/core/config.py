@@ -15,6 +15,18 @@ class Settings(BaseSettings):
     
     # Database settings
     DATABASE_URL: str = "sqlite+aiosqlite:///./snake_arena.db"
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def assemble_db_connection(cls, v: str | None) -> str:
+        if not v:
+            return "sqlite+aiosqlite:///./snake_arena.db"
+        # Render/Heroku provide postgres:// which implies psycopg2, but we use asyncpg
+        if v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql+asyncpg://", 1)
+        if v.startswith("postgresql://") and "+asyncpg" not in v:
+             return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
     
     # CORS settings
     # Default to valid list, but allow override via ALLOWED_ORIGINS env var
