@@ -1,0 +1,52 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=/api
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - snake-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://snake_user:snake_password@db:5432/snake_db
+      - ALLOWED_ORIGINS=http://localhost:8080,http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - snake-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=snake_user
+      - POSTGRES_PASSWORD=snake_password
+      - POSTGRES_DB=snake_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U snake_user -d snake_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - snake-network
+
+volumes:
+  postgres_data:
+
+
+networks:
+  snake-network:
+    driver: bridge
