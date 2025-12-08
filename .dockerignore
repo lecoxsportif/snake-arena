@@ -1,0 +1,17 @@
+node_modules
+.venv
+venv
+__pycache__
+.git
+.github
+.vscode
+dist
+build
+coverage
+.env
+.DS_Store
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
