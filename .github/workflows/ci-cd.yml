@@ -30,7 +30,7 @@ jobs:
     - name: Run tests
       # Using an in-memory SQLite DB for tests to avoid needing a Postgres service here
       env:
-        DATABASE_URL: sqlite+aiosqlite:///:memory:
+        DATABASE_URL: "sqlite+aiosqlite:///:memory:"
       run: uv run pytest
 
   test-frontend:
