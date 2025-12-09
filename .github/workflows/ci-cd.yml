@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test-backend:
+  test-backend-unit:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -27,12 +27,37 @@ jobs:
     - name: Install dependencies
       run: uv sync --frozen
       
-    - name: Run tests
-      # Using an in-memory SQLite DB for tests to avoid needing a Postgres service here
+    - name: Run Unit Tests
       env:
         DATABASE_URL: "sqlite+aiosqlite:///:memory:"
         PYTHONPATH: .
-      run: uv run pytest
+      run: uv run pytest tests
+
+  test-backend-integration:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      
+    - name: Install dependencies
+      run: uv sync --frozen
+      
+    - name: Run Integration Tests
+      env:
+        DATABASE_URL: "sqlite+aiosqlite:///:memory:"
+        PYTHONPATH: .
+      run: uv run pytest tests_integration
 
   test-frontend:
     runs-on: ubuntu-latest
@@ -57,7 +82,7 @@ jobs:
       run: npm test
 
   deploy:
-    needs: [test-backend, test-frontend]
+    needs: [test-backend-unit, test-backend-integration, test-frontend]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
