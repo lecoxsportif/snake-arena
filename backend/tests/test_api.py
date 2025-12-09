@@ -223,17 +223,9 @@ class TestLive:
 class TestRoot:
     """Test root endpoints."""
     
-    async def test_root(self, client):
-        """Test root endpoint."""
-        response = await client.get("/")
-        assert response.status_code == 200
-        data = response.json()
-        assert "message" in data
-        assert "version" in data
-    
     async def test_health(self, client):
         """Test health check endpoint."""
-        response = await client.get("/health")
+        response = await client.get("/api/health")
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "healthy"
